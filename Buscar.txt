@@ -1,0 +1,27 @@
+
+//*----------------------------------------------------------------------*
+//* Este JOB busca JCLs o ficheros, segun se le especifique, esto es,    *
+//* el job buscara lo que se le ponga despues de la palabra SRCHFOR,     *
+//* si ahí le indicamos un fichero, buscara un fichero en la librari     *
+//* indicada tras el NEWDD  DD DSN=, de este modo si le indicamos un JOB *
+//* buscara un JOB, siempre dentro de la librari especificada, pudiendo  *
+//* añadir mas de una libreria duplicando las DD. Para buscar en un job  *
+//* en concreto pondremos la libreria seguida del nombre del JOB entre   *
+//* parentesis. Las busquedas se guardaran en un fichero que le indicamos*
+//* tras OUTDD  DD DSN= Es aconsejable borrar el fichero en unpaso previo*
+//*----------------------------------------------------------------------*
+//SEARCH  EXEC PGM=ISRSUPC,                                           
+//            PARM=(SRCHCMP,
+//            'ANYC')
+//* Buscamos dentro de una libreria, buscaremos JCLs
+//NEWDD  DD DSN=NOMBRE.DE.LA.LIBRERIA,DISP=SHR
+//* Buscamos dentro de un JOB, buscaremos un fichero
+//       DD DSN=NOMBRE.DE.LA.LIBRERIA(JCL),DISP=SHR
+//          
+//OUTDD  DD DSN=FICHERO.RESULTANTE.DE.LA.BUSQUEDA,
+//          DISP=(NEW,CATLG),UNIT=SYSDA,
+//          SPACE=(0,(50,100),RLSE),
+//          DCB=(BLKSIZE=0)
+//SYSIN  DD *
+SRCHFOR  'FICHERO.O.JCL.A.BUSCAR'
+/*
