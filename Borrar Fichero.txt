@@ -1,0 +1,14 @@
+//*-----------------------------------------------------------------------*
+//* Este es un paso de borrado de ficheros. Despues de la instruccion DEL *
+//* separado de esta por un espacio pondremos el nombre del fichero que   *
+//* queremos borrar esto se puede repetir tantas veces como ficheros      *
+//* queramos borrar, sin necesidad de repetir el parrafo N veces.         *
+//*-----------------------------------------------------------------------*
+//BORRA01  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  DEL MI.FICHERO.A.BORRAR
+  DEL MI.SEGUNDO.FICHERO.A.BORRAR                                                                  
+  SET MAXCC = 0                                                         
+  SET LASTCC = 0                                                        
+/*                                                                      
