@@ -1,0 +1,73 @@
+//*--------------------------------------------------------------------*
+//* FE01 y FE02 son los dos ficheros que vamos a comparar, ALTAS, IGUAL*
+//* y BAJAS son los ficheros que vamos a obtener (No es necesario      *
+//* obtener los tres, podresmos obtener unos solo o dos solo en funcion*
+//* de lo que queramos). Las instrucciones JNF1CNTL DD y JNF2CNTL DD   *
+//* nos permitiran hacer instrucciones que hariamos en un SORT normal  *
+//* sobre los ficheros de entrada.                                     *
+//*                                                                    *
+//* JOIN nos permite indicar el tipo de cruce que vamos a realizar.    *
+//* Los tipos de cruce son los siguientes:                             *
+//* UNPAIRED,F1,ONLY                                                   *
+//*     Registros del fichero 1 no coincidentes.                       *
+//* UNPAIRED,F2,ONLY                                                   *
+//*     Registros del fichero 2 no coincidentes.                       *
+//* UNPAIRED,F1                                                        *
+//*     Registros coincidentes y registros del fichero 1 no            *
+//*     coincidentes (left outer join)                                 *
+//* UNPAIRED,F2                                                        *
+//*     Registros coincidentes y registros del fichero 2 no            * 
+//*     coincidentes (right outer join)                                *
+//* UNPAIRED,F1,F2 o UNPAIRED                                          *
+//*     Registros coincidentes, registros no coincidentes del fichero 1*
+//*     y registros no coincidentes del fichero 2 (full outer join)    *
+//* UNPAIRED,F1,F2 ONLY o UNPAIRED ONLY                                *
+//*     Registros no coincidentes del fichero 1 y registros no         * 
+//*     coincidentes del fichero 2                                     *
+//*                                                                    *
+//* REFORMAT FIELDS=(F1:29,18,F2:13,18,F1:079,003,F2:363,003,?) aquí   *
+//* indicamos las posiciones del FE01(F1) y del FE02(F2) que queremos  *
+//* que contenga el fichero de salida. La interrogacion (?) nos        *
+//* devolvera una B en caso de que los fichero crucen por las claves   *
+//* indicadas, un 1 en el caso en el que el registro solo se encuentre *
+//* en el fichero 1 y un 2 en el caso de que el registro solo se       *
+//* encuentre en el fichero 2.                                         *
+//*                                                                    *
+//* De este modo podemos generara 3 OUTFILE uno por cada valos de la   *
+//* interrogación.                                                     *
+//*--------------------------------------------------------------------*00010000
+//SORT01   EXEC PGM=SORT                                                00020001
+//SYSOUT   DD SYSOUT=*                                                  00030000
+//FE01     DD DSN=EXF12.BY.LR.BDK.BYBEA106.PERSONAS.F180308,            00040000
+//            DISP=SHR                                                  00050000
+//FE02     DD DSN=EXF12.BY.LR.BDK.BYBEA105.PERSONAS.F180308,            00060000
+//            DISP=SHR                                                  00070000
+//ALTAS    DD DSN=DEF.DESMOC.COMPARAR.ALTAS,                            00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//IGUAL    DD DSN=DEF.DESMOC.COMPARAR.IGUAL,                            00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//BAJAS    DD DSN=DEF.DESMOC.COMPARAR.BAJAS,                            00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//JNF1CNTL DD *                                                         00280000
+  INREC FIELDS=(0001,1819,181X)                                         00290000
+/*                                                                      00300000
+//JNF2CNTL DD *                                                         00310000
+  INREC FIELDS=(0001,1819,181X)                                         00290000
+/*                                                                      00330000
+//SYSIN DD *                                                            00340000
+  JOIN UNPAIRED,F1,F2                                                   00350000
+   JOINKEYS F1=FE01,FIELDS=(0001,1819,A)                                00360000
+   JOINKEYS F2=FE02,FIELDS=(0001,1819,A)                                00370000
+  REFORMAT FIELDS=(F1:0001,1819,F2:0001,1819,?),FILL=C' '               00380001
+  SORT FIELDS=COPY                                                      00390000
+   OUTFIL FNAMES=ALTAS,INCLUDE=(3639,0001,CH,EQ,C'1'),                  00420001
+      BUILD=(0001,1819)                                                 00421001
+   OUTFIL FNAMES=IGUAL,INCLUDE=(3639,0001,CH,EQ,C'B'),                  00430000
+      BUILD=(0001,1819)                                                 00432001
+   OUTFIL FNAMES=BAJAS,INCLUDE=(3639,0001,CH,EQ,C'2'),
+      BUILD=(1820,1819)
+  END                                                                   00520000
+/*                                                                      00530000

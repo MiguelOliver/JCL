@@ -1,0 +1,46 @@
+//*--------------------------------------------------------------------*
+//* FE01 y FE02 son los dos ficheros que vamos a comparar, SIEXISTE es *
+//* el fichero de salida que vamos a obtener si las pociciones de los  *
+//* ficheros que indicaremos mas adelante coinciden.                   *
+//* JOIN UNPAIRED,F1,F2 Lo explicamos en el cruce complejo.            *
+//*                                                                    *
+//*JOINKEYS F1=FE01,FIELDS=(PI,LO,A) | Posiciones del FE01 y el FE02   *
+//*                                  | que vamos a comparar, puedemos  *
+//*JOINKEYS F2=FE02,FIELDS=(PI,LO,A) | tener mas de una                *
+//*                                  | PI indica la posicion de inicio *
+//*                                  | LO indica la longitud del campo *
+//*                                  | Si incluimos al final SORTED    *
+//*                                  | indicaremos que el fichero esta *
+//*                                  | ordenado.                       *
+//*                                                                    *
+//* REFORMAT FIELDS=(F1:29,18,F2:13,18,F1:079,003,F2:363,003,?) aquí   *
+//* indicamos las posiciones del FE01(F1) y del FE02(F2) que queremos  *
+//* que contenga el fichero de salida. La interrogacion (?) nos        *
+//* devolvera una B en caso de que los fichero crucen por las claves   *
+//* indicadas.                                                         *
+//*                                                                    *    
+//*OUTFIL FNAMES=SIEXISTE,INCLUDE=(43,1,CH,EQ,C'B'),                   *
+//*        BUILD=(1,43)                                                *
+//* Si el fichero cruza construimos el fichero de salida indicandole en*
+//* BUILD las posiciones que queremos usar de la estrucctura           *
+//* especificada en el REFORMAT FIELDS.                                *
+//*--------------------------------------------------------------------*
+//SORTNN   EXEC PGM=SORT,REGION=8M,COND=(0,NE)
+//SYSOUT  DD SYSOUT=*
+//FE01     DD DSN=FICHERO.ENTRADA.F1,DISP=SHR
+//FE02     DD DSN=FICHERO.ENTRADA.F2,DISP=SHR
+//SIEXISTE DD DSN=FICHERO.SALIDA,
+//            DISP=(,CATLG,CATLG),
+//            SPACE=(TRK,(4500,750),RLSE),
+//            DCB=(RECFM=FB,BLKSIZE=0,DSORG=PS)
+//SYSIN    DD *
+  JOIN UNPAIRED,F1,F2
+  JOINKEYS F1=FE01,FIELDS=(PI,LO,A)
+  JOINKEYS F2=FE02,FIELDS=(PI,LO,A)
+  REFORMAT FIELDS=(F1:29,18,F2:13,18,F1:079,003,F2:363,003,?)
+  SORT FIELDS=COPY
+  OUTFIL FNAMES=SIEXISTE,INCLUDE=(43,1,CH,EQ,C'B'),
+          BUILD=(1,43)
+  END
+/*
+

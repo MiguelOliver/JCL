@@ -1,0 +1,61 @@
+//*--------------------------------------------------------------------*
+//* En este Cruce hemos añadido un fichero mas. ¿Como?                 *
+//* En la parte del INCLUDE incluimos mas condiciones, no solo la      *
+//* con la marca de cruce, sino comparamos valores de mas campos.      *
+//*--------------------------------------------------------------------*00010000
+//SORT01   EXEC PGM=SORT                                                00020001
+//SYSOUT   DD SYSOUT=*                                                  00030000
+//FE01     DD DSN=DEF.BY.LR.BDK.BYBEB201.OPEOPEAT.F160404,              00040000
+//            DISP=SHR                                                  00050000
+//FE02     DD DSN=EXF12.BY.LR.BDK.BYBEB201.OPEOPEAT.F160404,            00060000
+//            DISP=SHR                                                  00070000
+//ALTAS    DD DSN=DEF.DESARG.COMPARAR.ALTAS,                            00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//IGUAL    DD DSN=DEF.DESARG.COMPARAR.IGUAL,                            00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//MODIFICA DD DSN=DEF.DESARG.COMPARAR.MODIFICA,                         00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//BAJAS    DD DSN=DEF.DESARG.COMPARAR.BAJAS,                            00200001
+//            DISP=(,CATLG,DELETE),                                     00210000
+//            SPACE=(TRK,(150,150),RLSE)                                00230000
+//JNF1CNTL DD *                                                         00280000
+  INREC FIELDS=(0001,0825,50X,0876,675)                                 00290000
+/*                                                                      00300000
+//JNF2CNTL DD *                                                         00310000
+  INREC FIELDS=(0001,1550)                                              00290000
+/*                                                                      00330000
+//SYSIN DD *                                                            00340000
+  JOIN UNPAIRED,F1,F2                                                   00350000
+   JOINKEYS F1=FE01,FIELDS=(0001,1550,A)                                00360000
+   JOINKEYS F2=FE02,FIELDS=(0001,1550,A)                                00370000
+  REFORMAT FIELDS=(F1:0001,1550,F2:0001,1550,?),FILL=C' '               00380001
+  SORT FIELDS=COPY                                                      00390000
+   OUTFIL FNAMES=ALTAS,INCLUDE=(3101,0001,CH,EQ,C'1'),                  00420001
+      BUILD=(0001,1550)                                                 00421001
+   OUTFIL FNAMES=IGUAL,INCLUDE=(3101,0001,CH,EQ,C'B',AND,               00430000
+                                0001,0200,CH,EQ,1551,0200,CH,AND,       00431001
+                                0201,0200,CH,EQ,1751,0200,CH,AND,       00431001
+                                0401,0200,CH,EQ,1951,0200,CH,AND,       00431001
+                                0601,0200,CH,EQ,2151,0200,CH,AND,       00431001
+                                0801,0200,CH,EQ,2351,0200,CH,AND,       00431001
+                                1001,0200,CH,EQ,2551,0200,CH,AND,       00431001
+                                1201,0200,CH,EQ,2751,0200,CH,AND,       00431001
+                                1401,0150,CH,EQ,2951,0150,CH),          00431001
+      BUILD=(0001,1550)                                                 00432001
+   OUTFIL FNAMES=MODIFICA,INCLUDE=(3101,0001,CH,EQ,C'B',AND,            00440001
+                                   (0001,0200,CH,NE,1551,0200,CH,OR,    00441001
+                                    0201,0200,CH,NE,1751,0200,CH,OR,    00441001
+                                    0401,0200,CH,NE,1951,0200,CH,OR,    00441001
+                                    0601,0200,CH,NE,2151,0200,CH,OR,    00441001
+                                    0801,0200,CH,NE,2351,0200,CH,OR,    00441001
+                                    1001,0200,CH,NE,2551,0200,CH,OR,    00441001
+                                    1201,0200,CH,NE,2751,0200,CH,OR,    00441001
+                                    1401,0150,CH,NE,2951,0150,CH)),     00441001
+      BUILD=(0001,1550,1551,1550)
+   OUTFIL FNAMES=BAJAS,INCLUDE=(3101,0001,CH,EQ,C'2'),
+      BUILD=(1551,1550)
+  END                                                                   00520000
+/*                                                                      00530000
