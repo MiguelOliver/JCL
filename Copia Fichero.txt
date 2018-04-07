@@ -1,0 +1,19 @@
+//*--------------------------------------------------------------------*
+//* Este parrafo copia un fichero.                                     *
+//* En el SORT FIELDS indicaremos =COPY si queremos copiarlo tal cual. *
+//* En el caso de que solo queramos copiar parte del fichero podremos  *
+//* indicar las posiciones de la siguiente manerea:                    *
+//* SORT FIELDS=(11,4,CH,A,15,4,CH,A,19,3,CH,A)                        *
+//*--------------------------------------------------------------------*
+//SORT98   EXEC PGM=SORT,REGION=8M,COND=(0,NE)
+//SYSOUT   DD SYSOUT=*
+//SORTIN   DD DSN=DEF.TG.LR.BDK.TGBEAE03.PROD.FINAN,
+//            DISP=SHR
+//SORTOUT  DD DSN=ORF3.TG.LR.BDK.TGBEAE03.PROD.FINAN,
+//            DISP=(,CATLG,CATLG),
+//            SPACE=(TRK,(4500,750),RLSE),
+//            DCB=(RECFM=FB,BLKSIZE=0,DSORG=PS)
+//SYSIN    DD *
+  SORT FIELDS=COPY
+/*
+
