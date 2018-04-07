@@ -1,0 +1,20 @@
+//*-----------------------------------------------------------------------*
+//* Este es un paso para enviar un correo.                                *
+//* DEST correo destinatario. direccion de correo a la que vamos a hacer  *
+//* el envio.                                                             *
+//* TITLE titulo del correo que vamos a enviar                            *
+//* LINESIZE longitud de una linea en el correo                           *
+//* MEMO mensaje que vamos a enviar                                       *
+//*-----------------------------------------------------------------------*
+//CORREO01 EXEC PGM=XX0MEMO,PARM='MSGLVL=8'
+//STEPLIB  DD DSN=PRBO.GENERAL.LOADLIB,DISP=SHR
+//APIFILE  DD *
+)SEND
+DEST CORREO@DESTINATARIO
+TITLE Titulo del correo
+LINESIZE 75
+MEMO
+       "COPIA FICHEROS REALIZADA PARA ORF"
+)END
+/*                                                       
+/*                                                                      
