@@ -38,17 +38,17 @@
 //*--------------------------------------------------------------------*00010000
 //SORT01   EXEC PGM=SORT                                                00020001
 //SYSOUT   DD SYSOUT=*                                                  00030000
-//FE01     DD DSN=EXF12.BY.LR.BDK.BYBEA106.PERSONAS.F180308,            00040000
+//FE01     DD DSN=FICHERO.ENTRADA.1,                                    00040000
 //            DISP=SHR                                                  00050000
-//FE02     DD DSN=EXF12.BY.LR.BDK.BYBEA105.PERSONAS.F180308,            00060000
+//FE02     DD DSN=FICHERO.ENTRADA.2,                                    00060000
 //            DISP=SHR                                                  00070000
-//ALTAS    DD DSN=DEF.DESMOC.COMPARAR.ALTAS,                            00200001
+//ALTAS    DD DSN=FICHERO.COMPARAR.ALTAS,                               00200001
 //            DISP=(,CATLG,DELETE),                                     00210000
 //            SPACE=(TRK,(150,150),RLSE)                                00230000
-//IGUAL    DD DSN=DEF.DESMOC.COMPARAR.IGUAL,                            00200001
+//IGUAL    DD DSN=FICHERO.COMPARAR.IGUAL,                               00200001
 //            DISP=(,CATLG,DELETE),                                     00210000
 //            SPACE=(TRK,(150,150),RLSE)                                00230000
-//BAJAS    DD DSN=DEF.DESMOC.COMPARAR.BAJAS,                            00200001
+//BAJAS    DD DSN=FICHERO.COMPARAR.BAJAS,                               00200001
 //            DISP=(,CATLG,DELETE),                                     00210000
 //            SPACE=(TRK,(150,150),RLSE)                                00230000
 //JNF1CNTL DD *                                                         00280000
