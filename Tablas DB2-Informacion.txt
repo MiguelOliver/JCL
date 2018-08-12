@@ -1,0 +1,8 @@
+Saber informacion de una tabla
+SELECT * FROM SYSIBM.SYSTABLES
+WHERE NAME LIKE 'TG%%'        
+
+Saber cuantas particiones tiene una tabla 
+
+SELECT * FROM SYSIBM.SYSTABSTATS
+WHERE NAME LIKE 'NOMBRE_TABLA%%'
