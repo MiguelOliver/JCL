@@ -1,0 +1,35 @@
+//**********************************************************************
+//** COMPONEMOS EL SORT                                                 
+//** 1º genere un sort normal, con un fichero de entrada y uno de salida
+//** del de entrada cogemos el secuencial que tenemos que incrementar   
+//** "12,4,ZD,ADD,+1" y el resto es la generacion del paso de OUTREC.
+//**********************************************************************
+//SORT03   EXEC PGM=SORT,REGION=8M,COND=(0,NE)
+//SYSOUT   DD SYSOUT=*
+//SORTIN   DD DSN=DEW.BY.LR.BDK.TENEDORA.SEC.MAX,DISP=SHR
+//SORTOUT  DD DSN=DEW.BY.LR.BDK.TENEDORA.SECUENC,
+//            DISP=(,CATLG,DELETE),
+//            SPACE=(TRK,(150,75),RLSE),
+//            DCB=(RECFM=FB,BLKSIZE=0,DSORG=PS)
+//SYSIN    DD *
+  SORT FIELDS=COPY                                                      00350001
+  OPTION STOPAFT=1
+  OUTREC FIELDS=(C'  OUTREC FIELDS=(1,11,SEQNUM,04,ZD,START=',
+                 12,4,ZD,ADD,+1,LENGTH=4,EDIT=(TTTT),
+                 C',INCR=1)',26X)
+/*
+//**********************************************************************
+//** SECUENCIAMOS LOS NUEVOS DESDE LA SECUENCIA MAS ALTA + 1            00032000
+//** 2º Sort normal con la diferencia que en la SYSIN incluimos el 
+//** fichero generado en el paso anterior que contiene el OUTREC.
+//** El segundo fichero solo contiene la instruccion SORT FIELDS=COPY
+//**********************************************************************
+//SORT04   EXEC PGM=SORT,REGION=8M,COND=(0,NE)
+//SYSOUT   DD SYSOUT=*
+//SORTIN   DD DSN=DEW.BY.LR.BDK.TENEDORA.NEW,DISP=SHR
+//SORTOUT  DD DSN=DEW.BY.LR.BDK.TENEDORA.NEW.SEC,
+//            DISP=(,CATLG,DELETE),
+//            SPACE=(TRK,(150,75),RLSE),
+//            DCB=(RECFM=FB,BLKSIZE=0,DSORG=PS)
+//SYSIN    DD DSN=DEW.BY.LR.BDK.TENEDORA.SECUENC,DISP=SHR
+//         DD DSN=DEW.DEPGD0.JCL.ALM(SORTFIEL),DISP=SHR
