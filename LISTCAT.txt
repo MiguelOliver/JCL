@@ -1,0 +1,39 @@
+//LISTCAT JOB (101,'CIRBE-DEARG2'),NOTIFY=&SYSUID,CLASS=B,MSGCLASS=X,  JOB47951
+//           RESTART=*
+//DELETEFF EXEC PGM=IDCAMS                                              00030500
+//SYSPRINT DD SYSOUT=*                                                  00030600
+//SYSIN    DD *                                                         00030700
+  DEL  DES.DEPGD0.BORRAR                                                00030807
+  DEL  DES.DEPGD0.BORRAR.SORT                                           00030807
+  SET MAXCC = 0                                                         00030900
+  SET LASTCC = 0                                                        00031000
+/*                                                                      00032000
+//CHKEJE01 EXEC PGM=IKJEFT01
+//SYSTSPRT DD DSN=DES.DEPGD0.BORRAR,
+//            DISP=(NEW,CATLG,DELETE),
+//            SPACE=(CYL,(1,1),RLSE),
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=0)
+//SYSTSIN  DD *
+  LISTCAT ENT('DES.DEPGD0.FICHERO.BORRAR.*') ALL
+  LISTCAT ENT('DES.DEPGD0.FICHERO.BORRER.*') ALL
+  LISTCAT ENT('DES.DEPGD0.FICHERO.BORRIR.*') ALL
+/*
+//SORT01   EXEC PGM=SORT,REGION=8M,COND=(0,NE)
+//SYSOUT   DD SYSOUT=*
+//SORTIN   DD DSN=DES.DEPGD0.BORRAR,DISP=SHR
+//         DD *
+  SET MAXCC = 0                                                         00030900
+  SET LASTCC = 0                                                        00031000
+//SORTOUT  DD DSN=DES.DEPGD0.BORRAR.SORT,
+//            DISP=(,CATLG,DELETE),
+//            SPACE=(TRK,(150,75),RLSE),
+//            DCB=(RECFM=FB,BLKSIZE=0,DSORG=PS)
+//SYSIN    DD *
+  INCLUDE COND=(1,7,CH,EQ,C'NONVSAM',OR,
+                3,3,CH,EQ,C'SET')
+  OUTREC IFTHEN=(WHEN=(1,1,CH,NE,C' '),
+         BUILD=(C' DELETE ',17,50),HIT=NEXT),
+         IFTHEN=(WHEN=(1,1,CH,EQ,C' '),
+         BUILD=(1,58),HIT=NEXT)
+  SORT FIELDS=(1,1,CH,D)
+//*
