@@ -1,0 +1,44 @@
+//DESMOCE JOB (X,DES),MSGCLASS=X,CLASS=1,NOTIFY=&SYSUID                        
+//*********************************************************************                                             
+//*--------------------------------------------------------------------*        
+//*        BORRA01 : BORRADO DE LOS FICHEROS DE SALIDA                 *        
+//*--------------------------------------------------------------------*        
+//BORRA01  EXEC PGM=IDCAMS                                                      
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSIN    DD *                                                                 
+                                                                                
+  DEL      DES.DESMOC.SALIDA.SORT02                                            
+  DEL      DES.DESMOC.QUERY.PRO.UK(DELETLOG)                                   
+                                                                                
+  SET MAXCC  = 0                                                                
+  SET LASTCC = 0                                                                
+//**************************************************************                
+//* GENERAMOS EL FICHERO CON LOS DATOS QUE VAMOS A PONER EN LA *                
+//* SENTENCIA SQL                                              *                
+//* HAY QUE GENERAR UN FICHERO DE 4000                         *                
+//**************************************************************                
+//SORT02   EXEC PGM=SORT,REGION=6M                                              
+//SYSOUT   DD SYSOUT=*                                                          
+//SORTIN   DD DSN=DES.DESMOC.SPUFI.EEFF.RUBEN.GCAR,DISP=SHR                    
+//SORTOUT  DD DSN=DES.DESMOC.SALIDA.SORT02,                                    
+//            DISP=(NEW,CATLG,),                                                
+//            SPACE=(CYL,(5,2),RLSE),                                           
+//            DCB=(RECFM=FB,LRECL=4000,BLKSIZE=0,DSORG=PS)                      
+//SYSIN    DD *                                                                 
+  SORT FIELDS=COPY                                                              
+/*                                                                              
+//*OUTREC FIELDS=(1,500)                                                        
+//*********************************************************                     
+//*********************************************************                     
+//PASO0V   EXEC PGM=LQCERR09                                                    
+//ENTRADA1 DD DSN=DES.DESMOC.SALIDA.SORT02,DISP=SHR                            
+//ENTRADA2 DD DSN=DES.DESMOC.JCL(DELLOG),DISP=SHR                              
+//SALIDA1  DD DSN=DES.DESMOC.QUERY.PRO.UK(DELETLOG),DISP=SHR,                  
+//            SPACE=(CYL,(20,10),RLSE),                                         
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=0)                                 
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSOUT   DD SYSOUT=*                                                          
+//SYSDBOUT DD SYSOUT=*                                                          
+//SYSABOUT DD SYSOUT=*                                                          
+//SYSOUT   DD SYSOUT=*                                                          
+/*                                                                              

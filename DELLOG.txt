@@ -1,0 +1,45 @@
+38   --> Posicion donde empieza a escribir
+0001 --> Posicion de inicio del dato
+04   --> Longitud del dato
+,00     O9799_IDEMPR --> nombre del dato en la tabla
+= '    ' --> expacio que se van a rellenar  con el dato del otro fichero
+           
+             SELECT * FROM TG_PERSCONT_ASN                                  
+             WHERE                                                              
+38X000104,00     O9799_IDEMPR     = '    '                                      
+38X001504,00 AND O9799_IDCENT     = '    '                                      
+38X002902,00 AND O9799_CDTIPOPE   = '  '                                        
+38X004518,00 AND O9799_IDOP       = '                  '                        
+38X009702,00 AND O9799_CDTIPOBJ   = '  '                                        
+37X011335,00 AND O9799_IDOBJ     = '                                   '        
+38X016506,00 AND O9799_CDGAR      = '      '                                    
+38X017810,00 AND O9799_FECINI     = '          '                                
+38X019226,00 AND O9799_TIMESMODIF = '                          '                
+              ;COMMIT;                                                          
+                                                                                
+		DELETE FROM GA_LOG_ESTADO                                    
+             WHERE                                                              
+38X000104,00     O9799_IDEMPR     = '    '                                      
+38X001504,00 AND O9799_IDCENT     = '    '                                      
+38X002902,00 AND O9799_CDTIPOPE   = '  '                                        
+38X004518,00 AND O9799_IDOP       = '                  '                        
+38X009702,00 AND O9799_CDTIPOBJ   = '  '                                        
+37X011335,00 AND O9799_IDOBJ     = '                                   '        
+38X016506,00 AND O9799_CDGAR      = '      '                                    
+38X017810,00 AND O9799_FECINI     = '          '                                
+38X019226,00 AND O9799_TIMESMODIF = '                          '                
+              ;COMMIT;                                                          
+                                                                                
+             SELECT * FROM GA_LOG_ESTADO                                  
+             WHERE                                                              
+38X000104,00     O9799_IDEMPR     = '    '                                      
+38X001504,00 AND O9799_IDCENT     = '    '                                      
+38X002902,00 AND O9799_CDTIPOPE   = '  '                                        
+38X004518,00 AND O9799_IDOP       = '                  '                        
+38X009702,00 AND O9799_CDTIPOBJ   = '  '                                        
+37X011335,00 AND O9799_IDOBJ     = '                                   '        
+38X016506,00 AND O9799_CDGAR      = '      '                                    
+38X017810,00 AND O9799_FECINI     = '          '                                
+38X019226,00 AND O9799_TIMESMODIF = '                          '                
+              ;COMMIT;                                                          
+                                                                                
